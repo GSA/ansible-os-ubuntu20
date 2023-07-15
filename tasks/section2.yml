@@ -118,9 +118,7 @@
       ansible.builtin.command: systemctl stop avahi-daemon.socket
       ignore_errors: true
 
-    - name: Purge Avahi Daemon
-      ansible.builtin.command: apt purge avahi-daemon
-      ignore_errors: true      
+    
 
 - name: "SCORED | 2.1.4 | PATCH | Ensure echo services are not enabled | echo-dgram,echo-stream"
   block:
