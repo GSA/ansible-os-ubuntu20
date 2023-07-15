@@ -458,6 +458,10 @@
       - syslog
       - rule_4.2.1.2
 
+- name: 4.2.1.2 - Ensure rsyslog Service is enabled 
+  ansible.builtin.command: systemctl --now enable rsyslog
+  ignore_errors: true      
+
 - name: "NOTSCORED | 4.2.1.3 | PATCH | Ensure logging is configured"
   command: /bin/true
   changed_when: false
