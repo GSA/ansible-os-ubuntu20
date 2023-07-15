@@ -461,6 +461,10 @@
       - patch
       - rule_3.5.2.1
 
+- name: 3.5.2.1 - Ensure nftables is installed 
+  ansible.builtin.command: apt install nftables
+  ignore_errors: true     
+
 - name: "SCORED | 3.5.2.2 | PATCH | Ensure default deny firewall policy"
   ufw:
       rule: "{{ item.rule }}"
