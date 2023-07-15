@@ -108,6 +108,20 @@
       - rule_2.1.3
       - skip_ansible_lint
 
+- name: 2.1.3 - Ensure Avahi Server is not installed (Automated)
+  block:
+    - name: Stop Avahi Daemon service
+      ansible.builtin.command: systemctl stop avahi-daemon.service
+      ignore_errors: true 
+
+    - name: Stop Avahi Daemon socket
+      ansible.builtin.command: systemctl stop avahi-daemon.socket
+      ignore_errors: true
+
+    - name: Purge Avahi Daemon
+      ansible.builtin.command: apt purge avahi-daemon
+      ignore_errors: true      
+
 - name: "SCORED | 2.1.4 | PATCH | Ensure echo services are not enabled | echo-dgram,echo-stream"
   block:
       - name: "SCORED | 2.1.4 | PATCH | Ensure echo services are not enabled | echo-dgram"
