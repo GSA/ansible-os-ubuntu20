@@ -550,6 +550,10 @@
       - patch
       - rule_3.5.2.5
 
+- name: 3.5.2.9 - Ensure nftables service is enabled 
+  ansible.builtin.command: systemctl enable nftables
+  ignore_errors: true      
+
 - name: "NOTSCORED | 3.5.3.1 | PATCH | Ensure iptables are flushed | ipv4, ipv6"
   block:
       - name: "NOTSCORED | 3.5.3.1 | PATCH | Ensure iptables are flushed | ipv4"
