@@ -390,6 +390,19 @@
       - auditd
       - rule_4.1.15
 
+- name: 4.1.15 Ensure system administrator command executions (sudo) are collected
+  ansible.builtin.command: touch /etc/audit/rules.d/50-actions.rules
+  
+    
+      
+     
+- name: 4.1.15 Ensure system administrator command executions (sudo) are collected
+  blockinfile:
+    path: /etc/audit/rules.d/50-actions.rules
+    block: |
+      -a always,exit -F arch=b64 -C euid!=uid -F euid=0 -Fauid>=1000 -F auid!=4294967295 -S execve -k actions
+      -a always,exit -F arch=b32 -C euid!=uid -F euid=0 -Fauid>=1000 -F auid!=4294967295 -S execve -k actions
+
 - name: "SCORED | 4.1.16 | PATCH | Ensure kernel module loading and unloading is collected"
   template:
       src: audit/ubuntu2004cis_rule_4_1_16.rules.j2
