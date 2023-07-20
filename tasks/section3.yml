@@ -559,7 +559,13 @@
 
 - name: 3.5.2.9 - Ensure nftables service is enabled 
   ansible.builtin.command: systemctl enable nftables
-  ignore_errors: true      
+  ignore_errors: true
+
+- name: 3.5.2.10 - Ensure nftables rules are permanent
+  lineinfile:
+    path: /etc/nftables.conf
+    line: 'include "/etc/nftables.rules"'
+    state: present  
 
 - name: "NOTSCORED | 3.5.3.1 | PATCH | Ensure iptables are flushed | ipv4, ipv6"
   block:
