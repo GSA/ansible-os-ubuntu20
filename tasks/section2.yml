@@ -302,6 +302,10 @@
     - scored
     - rule_2.1.11
 
+
+- name: 2.1.16 Ensure rsync service is not installed
+  ansible.builtin.command: apt purge rsync -y    
+
 - name: "SCORED | 2.2.1.1 | PATCH | Ensure time synchronization is in use"
   block:
       - name: "SCORED | 2.2.1.1 | PATCH | Ensure time synchronization is in use - service install"
