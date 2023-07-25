@@ -483,14 +483,7 @@
       - syslog
       - rule_4.2.1.2
 
-- name: 4.2.1.2 - Ensure rsyslog Service is enabled
-  service:
-      name: rsyslog
-      state: started
-      enabled: yes
-  tags:
-      - rule_4.2.1.2      
-
+      
 - name: "NOTSCORED | 4.2.1.3 | PATCH | Ensure logging is configured"
   command: /bin/true
   changed_when: false
