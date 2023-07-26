@@ -672,6 +672,7 @@
     name: rsync
     state: stopped
     enabled: false
+  ignore_errors: true
   when:
     - not ubuntu2004cis_rsyncd_server
     - rsyncd_service_status.stdout == "loaded"
