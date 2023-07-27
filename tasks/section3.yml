@@ -555,15 +555,18 @@
       - patch
       - rule_3.5.2.5
 
-- name: 3.5.2.9 - Ensure nftables service is enabled 
-  ansible.builtin.command: systemctl enable nftables
-  ignore_errors: true
 
-- name: 3.5.2.9 - Ensure nftables service is enabled 
-  ansible.builtin.command: systemctl start nftables  
 
-- name: 3.5.2.9 - Ensure nftables service is enabled 
-  ansible.builtin.command: systemctl enable nftables  
+- name: 3.5.2.9 - Ensure nftables service is enabled
+  systemd:
+    name: nftables
+    state: started
+    enabled: yes
+    
+- name: 3.5.2.9 - Ensure nftables service is enabled
+  systemd:
+    name: nftables
+    enabled: yes  
 
 - name: 3.5.2.10 - Ensure nftables rules are permanent
   lineinfile:
