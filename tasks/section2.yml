@@ -107,9 +107,7 @@
       - patch
       - rule_2.1.3
       - skip_ansible_lint
-
-
-   
+ 
 - name: "SCORED | 2.1.4 | PATCH | Ensure echo services are not enabled | echo-dgram,echo-stream"
   block:
       - name: "SCORED | 2.1.4 | PATCH | Ensure echo services are not enabled | echo-dgram"
@@ -292,7 +290,7 @@
     - scored
     - rule_2.1.11
 
-- name: 2.1.1.6 - Ensure rsync service is not installed
+- name: 2.1.16 - Ensure rsync service is not installed
   apt:
     name: rsync
     state: absent
