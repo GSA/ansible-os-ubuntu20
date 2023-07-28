@@ -389,7 +389,6 @@
       - patch
       - auditd
       - rule_4.1.15
-
   
 - name: 4.1.15 | Ensure system administrator actions (sudolog) are collected
   file:
@@ -412,7 +411,6 @@
   tags:
     - rule_4.1.15
       
-
 - name: "SCORED | 4.1.16 | PATCH | Ensure kernel module loading and unloading is collected"
   template:
       src: audit/ubuntu2004cis_rule_4_1_16.rules.j2
@@ -431,9 +429,7 @@
       - patch
       - auditd
       - rule_4.1.16
-
     
-
 - name: "SCORED | 4.1.17 | PATCH | Ensure the audit configuration is immutable"
   template:
       src: audit/ubuntu2004cis_rule_4_1_17.rules.j2
@@ -482,7 +478,6 @@
       - patch
       - syslog
       - rule_4.2.1.2
-
       
 - name: "NOTSCORED | 4.2.1.3 | PATCH | Ensure logging is configured"
   command: /bin/true
