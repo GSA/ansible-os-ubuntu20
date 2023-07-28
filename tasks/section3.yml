@@ -555,8 +555,6 @@
       - patch
       - rule_3.5.2.5
 
-
-
 - name: 3.5.2.9 - Ensure nftables service is enabled
   systemd:
     name: nftables
@@ -594,9 +592,7 @@
       - notscored
       - patch
       - rule_3.5.3.1
-
      
-
 - name: "SCORED | 3.5.3.2 | PATCH | Ensure a table exists"
   shell: |
       nft create table inet {{ ubuntu2004cis_nftables_table }}
