@@ -959,7 +959,7 @@
         state: present
         create: true
         insertbefore: "# End of file"
-    - name: ""SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | apt"
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | apt"
       apt:
         name: systemd-coredump
         state: present
@@ -979,7 +979,7 @@
         state: present
         create: true
         insertbefore: "# End of file"
-    - name: ""SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | reload"
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | reload"
       shell: systemctl daemon-reload
   notify: restart systemd-coredump
   when:
