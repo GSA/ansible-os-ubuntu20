@@ -1,6 +1,6 @@
 ---
 # defaults file for Ubuntu2004-CIS
-ubuntu2004cis_skip_for_travis: true
+ubuntu2004cis_skip_for_travis: false
 
 ubuntu2004cis_section1: true
 ubuntu2004cis_section2: true
@@ -382,10 +382,10 @@ ubuntu2004cis_host_allow:
   - "192.168.0.0/255.255.0.0"
   - "0.0.0.0/0.0.0.0"
 
-ubuntu2004cis_firewall: firewalld
+# ubuntu2004cis_firewall: firewalld
 # ubuntu2004cis_firewall: iptables
 # ubuntu2004cis_firewall: ufw
-# ubuntu2004cis_firewall: nftables
+ubuntu2004cis_firewall: nftables
 
 # 3.5.3.2 | PATCH | Ensure a table exists"
 ubuntu2004cis_nftables_table: filter
