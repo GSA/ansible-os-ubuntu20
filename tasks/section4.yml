@@ -581,7 +581,7 @@
             line: \g<1> create 0640 \g<3> \g<4>
             backrefs: true
         notify:
-            - journald restart
+            - restart journald
       - name: 4.3 Ensure logrotate assigns appropriate permissions - Find files in /etc/logrotate.d/*
         find:
             file_type: file
@@ -595,7 +595,7 @@
             backrefs: true
         with_items: " {{ configFiles.files }}"
         notify:
-            - journald restart
+            - restart journald
   when:
       - ubuntu2004cis_rule_4_3
   tags:
