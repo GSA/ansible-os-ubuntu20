@@ -577,9 +577,21 @@
       - rule_5.3.1
 
 - name: "SCORED | 5.3.2 | PATCH | Ensure lockout for failed password attempts is configured"
-  lineinfile:
-      dest: /etc/pam.d/common-auth
-      line: 'auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900'
+  block:
+      - name: 5.3.2 Ensure lockout for failed password attempts is configured | pam_tally2.so
+        lineinfile:
+            dest: /etc/pam.d/common-auth
+            line: 'auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=1800'
+      - name: 5.3.2 Ensure lockout for failed password attempts is configured | pam_deny.so
+        lineinfile:
+            dest: /etc/pam.d/common-account
+            regexp: '^account\srequisite'
+            line: "account requisite pam_deny.so"
+      - name: 5.3.2 Ensure lockout for failed password attempts is configured | pam_tally2.so
+        lineinfile:
+            dest: /etc/pam.d/common-account
+            regexp: '^account\srequired'
+            line: "account required pam_tally2.so"
   when:
       - ubuntu2004cis_rule_5_3_2
   tags:
@@ -592,6 +604,18 @@
   lineinfile:
       dest: /etc/pam.d/common-password
       line: "password required pam_pwhistory.so remember={{ ubuntu2004cis_pass['history'] }}"
+  when:
+      - ubuntu2004cis_rule_5_3_3
+  tags:
+      - level1
+      - scored
+      - patch
+      - rule_5.3.3
+
+- name: "SCORED | 5.3.3 | PATCH | Allow 3 password retry attempt "
+  lineinfile:
+      dest: /etc/pam.d/common-password
+      line: "password requisite pam_pwquality.so retry=3"
   when:
       - ubuntu2004cis_rule_5_3_3
   tags:
