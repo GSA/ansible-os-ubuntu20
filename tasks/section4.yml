@@ -587,7 +587,6 @@
             file_type: file
             paths: "/etc/logrotate.d/"
         register: configFiles
-        with_items: " {{ configFiles.files }}"
       - name: 4.3 Ensure logrotate assigns appropriate permissions - Change files in /etc/logrotate.d/*
         lineinfile:
             path: "{{ item.path }}"
