@@ -462,6 +462,11 @@
       - patch
       - rule_3.5.2.1
 
+- name: 3.5.2.1 - Ensure nftables is installed
+  apt:
+    name: nftables
+    state: present 
+
 - name: "SCORED | 3.5.2.2 | PATCH | Ensure default deny firewall policy"
   ufw:
       rule: "{{ item.rule }}"
@@ -551,6 +556,23 @@
       - patch
       - rule_3.5.2.5
 
+- name: 3.5.2.9 - Ensure nftables service is enabled
+  systemd:
+    name: nftables
+    state: started
+    enabled: yes
+    
+- name: 3.5.2.9 - Ensure nftables service is enabled
+  systemd:
+    name: nftables
+    enabled: yes  
+
+- name: 3.5.2.10 - Ensure nftables rules are permanent
+  lineinfile:
+    path: /etc/nftables.conf
+    line: 'include "/etc/nftables.rules"'
+    state: present  
+
 - name: "NOTSCORED | 3.5.3.1 | PATCH | Ensure iptables are flushed | ipv4, ipv6"
   block:
       - name: "NOTSCORED | 3.5.3.1 | PATCH | Ensure iptables are flushed | ipv4"
@@ -571,7 +593,7 @@
       - notscored
       - patch
       - rule_3.5.3.1
-
+     
 - name: "SCORED | 3.5.3.2 | PATCH | Ensure a table exists"
   shell: |
       nft create table inet {{ ubuntu2004cis_nftables_table }}
