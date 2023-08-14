@@ -94,6 +94,7 @@
       - sysctl
       - rule_3.2.1
 
+
 - name: "SCORED | 3.2.2 | PATCH | Ensure ICMP redirects are not accepted | ipv4,ipv6"
   block:
       - name: "SCORED | 3.2.2 | PATCH | Ensure ICMP redirects are not accepted | ipv4"

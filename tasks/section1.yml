@@ -769,6 +769,19 @@
       - patch
       - rule_1.5.1
 
+- name: 1.5.1 Ensure permissions on bootloader config are not overridden 
+  block:
+      - name: 1.5.1 Ensure permissions on bootloader config are not overridden - step 1 - update chmod 444 to chmod 400 in /usr/sbin/grubmkconfig
+        shell: sed -ri 's/chmod\s+[0-7][0-7][0-7]\s+\$\{grub_cfg\}\.new/chmod 400 ${grub_cfg}.new/' /usr/sbin/grub-mkconfig
+      - name: 1.5.1 Ensure permissions on bootloader config are not overridden - step 2 -  check on password not being set before running chmod command
+        shell:  sed -ri 's/ && ! grep "\^password" \$\{grub_cfg\}.new >\/dev\/null//' /usr/sbin/grub-mkconfig
+  tags:
+      - level1
+      - scored
+      - grub
+      - patch
+      - rule_1.5.1
+
 - name: "SCORED | 1.5.2 | PATCH | Ensure bootloader password is set - generate password"
   shell: "set -o pipefail;
         if [ '{{ ubuntu2004cis_bootloader_password }}' == 'random' ];
@@ -927,33 +940,53 @@
       - patch
       - rule_1.6.4
 
-- name: "SCORED | 1.6.4 | PATCH | Ensure systemd-coredump is installed"
-  apt:
-    name: systemd-coredump
-    state: present
+- name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted"
+  block:
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | sysctl"
+      sysctl:
+        name: fs.suid_dumpable
+        value: "0"
+        state: present
+        reload: true
+        sysctl_set: true
+        ignoreerrors: true
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | limits.conf"
+      lineinfile:
+        dest: /etc/security/limits.conf
+        line: "*                hard    core            0"
+        regexp: '(^#)?\*\s+hard\s+core\s+[0-9]+'
+        state: present
+        create: true
+        insertbefore: "# End of file"
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | apt"
+      apt:
+        name: systemd-coredump
+        state: present
+    - name: 1.5.4 Ensure core dumps are restricted | coredump.conf
+      lineinfile:
+        dest: /etc/systemd/coredump.conf
+        line: "Storage=none"
+        regexp: '(^#)?\s*Storage\s*='
+        state: present
+        create: true
+        insertbefore: "# End of file"
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | coredump.conf"
+      lineinfile:
+        dest: /etc/systemd/coredump.conf
+        line: "ProcessSizeMax=0"
+        regexp: '(^#)?\s*ProcessSizeMax\s*='
+        state: present
+        create: true
+        insertbefore: "# End of file"
+    - name: "SCORED | 1.6.4 | PATCH | Ensure core dumps are restricted | reload"
+      shell: systemctl daemon-reload
   notify: restart systemd-coredump
   when:
       - ubuntu2004cis_rule_1_6_4
   tags:
       - level1
       - scored
-      - patch
-      - rule_1.6.4
-
-- name: "SCORED | 1.6.4 | PATCH | Ensure hard core 0 is set"
-  lineinfile:
-    dest: /etc/security/limits.conf
-    line: '*                hard    core            0'
-    regexp: '(^#)?\*\s+hard\s+core\s+[0-9]+'
-    state: present
-    create: true
-    insertbefore: "# End of file"
-  notify: restart systemd-coredump
-  when:
-      - ubuntu2004cis_rule_1_6_4
-  tags:
-      - level1
-      - scored
+      - sysctl
       - patch
       - rule_1.6.4
 

@@ -288,9 +288,9 @@
 
 - name: "SCORED | 4.1.11 | PATCH | Ensure use of privileged commands is collected"
   block:
-
       - name: "SCORED | 4.1.11 | PATCH | Get list of setuid/setguid binaries"
         shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
+        ##shell: find / -xdev \( -perm -4000 -o -perm -2000 \) -type f | awk '{print "-a always,exit -F path=" $1 " -F perm=x -F auid>='"$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)"' -F auid!=4294967295 -k privileged" }'
         register: priv_procs
         changed_when: false
         check_mode: false
@@ -412,7 +412,7 @@
 - name: "SCORED | 4.1.17 | PATCH | Ensure the audit configuration is immutable"
   template:
       src: audit/ubuntu2004cis_rule_4_1_17.rules.j2
-      dest: /etc/audit/rules.d/ubuntu2004cis_rule_4_1_17.rules
+      dest: /etc/audit/rules.d/99-finalize.rules
       owner: root
       group: root
       mode: 0600
@@ -561,7 +561,7 @@
       - rule_4.2.2.3
 
 - name: "SCORED | 4.2.3 | PATCH | Ensure permissions on all logfiles are configured"
-  command: find /var/log -type f -exec chmod g-wx,o-rwx {} +
+  command: find /var/log -type f -exec chmod g-wx,o-rwx "{}" + -o -type d -exec chmod g-w,o-rwx "{}" +
   changed_when: false
   failed_when: false
   when:
@@ -575,25 +575,28 @@
 
 - name: "NOTSCORED | 4.3 | PATCH | Ensure logrotate is configured"
   block:
-      - name: "NOTSCORED | 4.3 | PATCH | Register logrotate.d files"
-        find:
-            paths: /etc/logrotate.d/
-        register: log_rotates
-
-      - name: "NOTSCORED | 4.3 | PATCH | Ensure logrotate.conf exists"
-        file:
+      - name: 4.3 Ensure logrotate assigns appropriate permissions - /etc/logrotate.conf
+        lineinfile:
             path: /etc/logrotate.conf
-            state: touch
-        changed_when: false
-
-      - name: "NOTSCORED | 4.3 | PATCH | Ensure logrotate is configured"
-        replace:
+            regexp: "^(\\*)screate\\s*(\\S*)\\s*(\\S*)\\s*(\\S*)"
+            line: \g<1> create 0640 \g<3> \g<4>
+            backrefs: true
+        notify:
+            - restart journald
+      - name: 4.3 Ensure logrotate assigns appropriate permissions - Find files in /etc/logrotate.d/*
+        find:
+            file_type: file
+            paths: "/etc/logrotate.d/"
+        register: configFiles
+      - name: 4.3 Ensure logrotate assigns appropriate permissions - Change files in /etc/logrotate.d/*
+        lineinfile:
             path: "{{ item.path }}"
-            regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
-            replace: "\\1{{ ubuntu2004cis_logrotate }}"
-        with_items:
-            - "{{ log_rotates.files }}"
-            - { path: "/etc/logrotate.conf" }
+            regexp: "^(\\s*)create\\s*(\\S*)\\s*(\\S*)\\s*(\\S*)"
+            line: \g<1> create 0640 \g<3> \g<4>
+            backrefs: true
+        with_items: " {{ configFiles.files }}"
+        notify:
+            - restart journald
   when:
       - ubuntu2004cis_rule_4_3
   tags:
@@ -602,3 +605,4 @@
       - patch
       - syslog
       - rule_4.3
+

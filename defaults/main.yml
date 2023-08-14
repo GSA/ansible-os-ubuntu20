@@ -1,6 +1,6 @@
 ---
 # defaults file for Ubuntu2004-CIS
-ubuntu2004cis_skip_for_travis: true
+ubuntu2004cis_skip_for_travis: false
 
 ubuntu2004cis_section1: true
 ubuntu2004cis_section2: true
@@ -25,7 +25,8 @@ ubuntu2004cis_rule_1_1_1_2: true
 ubuntu2004cis_rule_1_1_1_3: true
 ubuntu2004cis_rule_1_1_1_4: true
 ubuntu2004cis_rule_1_1_1_5: true
-ubuntu2004cis_rule_1_1_1_6: true
+## Excluded 1.1.1.6 due to error removing squashfs builtin module
+ubuntu2004cis_rule_1_1_1_6: false
 ubuntu2004cis_rule_1_1_1_7: true
 ubuntu2004cis_rule_1_1_1_8: false
 ubuntu2004cis_rule_1_1_2: true
@@ -382,9 +383,9 @@ ubuntu2004cis_host_allow:
   - "192.168.0.0/255.255.0.0"
   - "0.0.0.0/0.0.0.0"
 
-ubuntu2004cis_firewall: firewalld
+# ubuntu2004cis_firewall: firewalld
 # ubuntu2004cis_firewall: iptables
-# ubuntu2004cis_firewall: ufw
+ubuntu2004cis_firewall: ufw
 # ubuntu2004cis_firewall: nftables
 
 # 3.5.3.2 | PATCH | Ensure a table exists"
@@ -396,14 +397,14 @@ ubuntu2004cis_firewall_services:
 
 # Warning Banner Content (issue, issue.net, motd)
 ubuntu2004cis_warning_banner: |
-   Authorized uses only. All activity may be monitored and reported.
+   This is a U.S. General Services Administration Federal Government computer system that is FOR OFFICIAL USE ONLY. This system is subject to monitoring. Therefore, no expectation of privacy is to be assumed. Individuals found performing unauthorized activities may be subject to disciplinary action including criminal prosecution.
 # End Banner
 
 ## Section 4 Vars
 ubuntu2004cis_auditd:
   admin_space_left_action: halt
   max_log_file_action: keep_logs
-  max_audit_log_file_size: 10
+  max_audit_log_file_size: 20
   backlog_limit: "8192"
 
 ubuntu2004cis_logrotate: "daily"
@@ -413,8 +414,8 @@ ubuntu2004cis_at_allow_users: []
 ubuntu2004cis_cron_allow_users: []
 
 ubuntu2004cis_sshd:
-  clientalivecountmax: 3
-  clientaliveinterval: 300
+  clientalivecountmax: 0
+  clientaliveinterval: 900
   ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
   macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
   kexalgorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
@@ -427,22 +428,22 @@ ubuntu2004cis_sshd:
 
 ubuntu2004cis_pwquality:
   - key: 'minlen'
-    value: '14'
+    value: '16'
   - key: 'dcredit'
-    value: '-1'
+    value: '0'
   - key: 'ucredit'
-    value: '-1'
+    value: '0'
   - key: 'ocredit'
-    value: '-1'
+    value: '0'
   - key: 'lcredit'
-    value: '-1'
+    value: '0'
 
 ubuntu2004cis_pass:
-  max_days: 365
-  min_days: 1
+  max_days: 90
+  min_days: 0
   warn_age: 7
   inactive: 30
-  history: 5
+  history: 24
 
 ubuntu2004cis_password_change_date_in_future_action: expire # lock
 
