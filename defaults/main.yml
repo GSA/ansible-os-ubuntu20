@@ -364,14 +364,8 @@ ubuntu2004cis_time_synchronization: chrony
 # ubuntu2004cis_time_synchronization: ntp
 
 ubuntu2004cis_time_synchronization_servers:
-  - uri: "0.pool.ntp.org"
-    config: "minpoll 8"
-  - uri: "1.pool.ntp.org"
-    config: "minpoll 8"
-  - uri: "2.pool.ntp.org"
-    config: "minpoll 8"
-  - uri: "3.pool.ntp.org"
-    config: "minpoll 8"
+  - uri: "169.254.169.123"
+    config: "prefer iburst minpoll 4 maxpoll 4"
 
 # 3.3 TCP Wrappers
 ubuntu2004cis_setup_tcp_wrappers: false
